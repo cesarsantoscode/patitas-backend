@@ -18,9 +18,9 @@ public class AutenticacionServiceImpl implements AutenticacionService {
     ResourceLoader resourceLoader;
 
     @Override
-    public String validarUsuario(LoginRequestDTO loginRequestDTO) throws IOException {
+    public String[] validarUsuario(LoginRequestDTO loginRequestDTO) throws IOException {
 
-        String nombreUsuario = null;
+        String[] datosUsuario = null;
         Resource resource = resourceLoader.getResource("classpath:usuarios.txt");
 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
@@ -32,19 +32,23 @@ public class AutenticacionServiceImpl implements AutenticacionService {
                 if (loginRequestDTO.tipoDocumento().equals(datos[0]) &&
                         loginRequestDTO.numeroDocumento().equals(datos[1]) &&
                         loginRequestDTO.password().equals(datos[2])) {
-                    nombreUsuario = datos[3];
+
+                    datosUsuario = new String[2];
+                    datosUsuario[0] = datos[3]; // Recuperar nombre
+                    datosUsuario[1] = datos[4]; // Recuperar correo
+
                 }
 
             }
 
         } catch (IOException e) {
 
-            nombreUsuario = null;
+            datosUsuario = null;
             throw new IOException(e);
 
         }
 
-        return nombreUsuario;
+        return datosUsuario;
 
     }
 
