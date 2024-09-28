@@ -9,6 +9,9 @@ import pe.edu.cibertec.patitas_backend.dto.LoginRequestDTO;
 import pe.edu.cibertec.patitas_backend.dto.LoginResponseDTO;
 import pe.edu.cibertec.patitas_backend.service.AutenticacionService;
 
+import java.time.Duration;
+import java.util.Arrays;
+
 @RestController
 @RequestMapping("/autenticacion")
 public class AutenticacionController {
@@ -21,11 +24,13 @@ public class AutenticacionController {
 
         try {
 
-            String[] nombreUsuario = autenticacionService.validarUsuario(loginRequestDTO);
-            if (nombreUsuario == null) {
+            Thread.sleep(Duration.ofSeconds(10));
+            String[] datosUsuario = autenticacionService.validarUsuario(loginRequestDTO);
+            System.out.println("Resultado: " + Arrays.toString(datosUsuario));
+            if (datosUsuario == null) {
                 return new LoginResponseDTO("01", "Error: Usuario no encontrado", "", "");
             }
-            return new LoginResponseDTO("00", "", nombreUsuario[0], nombreUsuario[1]);
+            return new LoginResponseDTO("00", "", datosUsuario[0], datosUsuario[1]);
 
         } catch (Exception e) {
             return new LoginResponseDTO("99", "Error: Ocurrió un problema", "", "");
