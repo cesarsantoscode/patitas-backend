@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pe.edu.cibertec.patitas_backend.dto.LoginRequestDTO;
 import pe.edu.cibertec.patitas_backend.dto.LoginResponseDTO;
+import pe.edu.cibertec.patitas_backend.dto.LogoutRequestDTO;
+import pe.edu.cibertec.patitas_backend.dto.LogoutResponseDTO;
 import pe.edu.cibertec.patitas_backend.service.AutenticacionService;
 
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/autenticacion")
@@ -31,6 +34,25 @@ public class AutenticacionController {
 
         } catch (Exception e) {
             return new LoginResponseDTO("99", "Error: Ocurrió un problema", "", "");
+        }
+
+    }
+
+    @PostMapping("/logout")
+    public LogoutResponseDTO login(@RequestBody LogoutRequestDTO logoutRequestDTO) {
+
+        try {
+
+            Thread.sleep(Duration.ofSeconds(5));
+            Date fechaLogout = autenticacionService.cerrarSesionUsuario(logoutRequestDTO);
+            System.out.println("Resultado: " + fechaLogout);
+            if (fechaLogout == null) {
+                return new LogoutResponseDTO(false, null, "Error: No se pudo registrar auditoría");
+            }
+            return new LogoutResponseDTO(true, fechaLogout, "");
+
+        } catch (Exception e) {
+            return new LogoutResponseDTO(false, null, "Error: Ocurrió un problema");
         }
 
     }
